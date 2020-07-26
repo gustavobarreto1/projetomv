@@ -1,24 +1,17 @@
 package br.com.projetomv.dao;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.projetomv.infra.DatabaseManager;
 import br.com.projetomv.model.Pessoa;
 
 public class CrudDao {
 
-	String personalId;
-	String nome;
-	String telefone;
-	boolean tipoPessoa;
-	String cep;
-	String rua;
-	String numero;
-	String banco;
-	Date dataConta;
-	double valor;
+	String pj;
 
 	public void addPessoa(Pessoa p) {
 
@@ -95,6 +88,60 @@ public class CrudDao {
 	}
 
 
+	public List<Pessoa> relatorio() {
+
+		Connection con = null;
+
+		PreparedStatement st = null;
+
+		ResultSet rs = null;
+
+		List<Pessoa> listaRelatorio = new ArrayList<>();
+
+		String sql1 = "SELECT * FROM cliente";
+
+		try {
+
+			con = DatabaseManager.getInstance().getConnection();
+			st = con.prepareStatement(sql1);
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+
+				Pessoa p = new Pessoa();
+
+				p.setPersonalId(rs.getString("personalid"));
+				p.setNome(rs.getString("nome"));
+				p.setTelefone(rs.getString("telefone"));
+				p.setEmail(rs.getString("email"));
+				p.setRg(rs.getString("rg"));
+				p.setSexo(rs.getString("sexo"));
+				listaRelatorio.add(p);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return listaRelatorio;
+
+	}
+
 	public void updPessoa(Pessoa p) {
 
 		Connection con = null;
@@ -136,7 +183,6 @@ public class CrudDao {
 		}
 
 	}
-
 }
 
 

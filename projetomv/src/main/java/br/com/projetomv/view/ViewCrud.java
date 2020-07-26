@@ -1,25 +1,19 @@
 package br.com.projetomv.view;
 
-import java.awt.Checkbox;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import br.com.projetomv.dao.CrudDao;
-import br.com.projetomv.infra.DatabaseManager;
 import br.com.projetomv.model.Pessoa;
-import net.proteanit.sql.DbUtils;
+import br.com.projetomv.model.PessoaDataModel;
 
 public class ViewCrud {
 
@@ -72,6 +66,7 @@ public class ViewCrud {
 
 				Pessoa pe = new Pessoa();
 				CrudDao dao = new CrudDao();
+
 				pe.setPersonalId(ViewCrud.this.textField.getText());
 				pe.setNome(ViewCrud.this.textField_1.getText());
 				pe.setTelefone(ViewCrud.this.textField_2.getText());
@@ -123,48 +118,6 @@ public class ViewCrud {
 		});
 		btnNewButton_2.setBounds(299, 169, 97, 25);
 		this.frame.getContentPane().add(btnNewButton_2);
-
-		JButton btnNewButton_3 = new JButton("Relatorio");
-		btnNewButton_3.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				Connection con = null;
-				PreparedStatement st = null;
-				ResultSet rs = null;
-				String sql1 = "SELECT * FROM cliente";
-
-				try {
-					con = DatabaseManager.getInstance().getConnection();
-					st = con.prepareStatement(sql1);
-
-					rs = st.executeQuery();
-
-					ViewCrud.this.table.setModel(DbUtils.resultSetToTableModel(rs));
-
-				} catch (Exception b) {
-					b.printStackTrace();
-				}finally {
-					try {
-						st.close();
-					} catch (SQLException b) {
-						b.printStackTrace();
-					}
-					try {
-						rs.close();
-					} catch (SQLException b) {
-						b.printStackTrace();
-					}
-					try {
-						con.close();
-					} catch (SQLException b) {
-						b.printStackTrace();
-					}
-				}
-			}
-		});
-		btnNewButton_3.setBounds(413, 169, 97, 25);
-		this.frame.getContentPane().add(btnNewButton_3);
 
 		this.textField = new JTextField();
 		this.textField.setBounds(84, 30, 116, 22);
@@ -220,15 +173,26 @@ public class ViewCrud {
 		lblNewLabel_5.setBounds(212, 103, 56, 16);
 		this.frame.getContentPane().add(lblNewLabel_5);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(34, 207, 483, 127);
-		this.frame.getContentPane().add(scrollPane);
+		JButton btnNewButton_3 = new JButton("Relatorio");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				ViewCrud.this.table.setModel(new PessoaDataModel());
+
+			}
+		});
+		btnNewButton_3.setBounds(423, 169, 97, 25);
+		this.frame.getContentPane().add(btnNewButton_3);
 
 		this.table = new JTable();
-		scrollPane.setViewportView(this.table);
+		this.table.setBounds(24, 217, 496, 117);
+		this.frame.getContentPane().add(this.table);
 
-		Checkbox checkbox = new Checkbox("Pesso Juridica");
-		checkbox.setBounds(13, 139, 108, 24);
-		this.frame.getContentPane().add(checkbox);
+		JCheckBox chckbx = new JCheckBox("Pessoa Juridica");
+		chckbx.setBounds(8, 131, 121, 25);
+		this.frame.getContentPane().add(chckbx);
+
+
 	}
 }
